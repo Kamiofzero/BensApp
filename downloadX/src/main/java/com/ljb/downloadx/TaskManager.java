@@ -4,11 +4,26 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class TaskManager {
-    ThreadPoolExecutor threadPoolExecutor;
+    ThreadPoolExecutor executor;
 
     private final int maxThreadSum = 1;
 
     public TaskManager() {
-        threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(maxThreadSum);
+        executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(maxThreadSum);
     }
+
+
+    public void addTask(Task task) {
+        executor.execute(task);
+    }
+
+    public void removeTask(Task task) {
+        executor.remove(task);
+    }
+
+    public void destroy() {
+        executor.shutdown();
+    }
+
+
 }
