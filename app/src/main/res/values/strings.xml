@@ -3,4 +3,10 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="waiting">等待\n</string>
+    <string name="preparing">准备中\n</string>
+    <string name="download">下载\n</string>
+    <string name="stop">暂停</string>
+    <string name="retry">重试</string>
+    <string name="no_item">还没有项目哦</string>
 </resources>

@@ -51,7 +51,13 @@ public class DownloadX {
     }
 
     public void cancelDownload(String url) {
-
+        if (url == null) return;
+        DownloadTask task = taskMap.get(url);
+        if (task == null) {
+            task.cancel();
+            taskManager.removeTask(task);
+            taskMap.remove(task);
+        }
     }
 
     public void downloadAll() {
@@ -70,7 +76,13 @@ public class DownloadX {
         @Override
         public void onStateChanged(DownloadInfo info) {
 
+            if (taskProgressListener != null) taskProgressListener.onTaskProgress(info);
         }
     };
 
+    TaskProgressListener taskProgressListener;
+
+    public void setTaskProgressListener(TaskProgressListener taskProgressListener) {
+        this.taskProgressListener = taskProgressListener;
+    }
 }

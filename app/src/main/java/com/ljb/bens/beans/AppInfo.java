@@ -11,6 +11,13 @@ public class AppInfo {
 
     public String storagePath;
 
-    public int downloadInfo;
+    public int downloadPercent;
 
+    public int status;
+
+    public AppInfo(String appName, String appDescription, String url) {
+        this.appName = appName;
+        this.appDescription = appDescription;
+        this.url = url;
+    }
 }

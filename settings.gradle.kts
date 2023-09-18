@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "BensApp"
 include(":app")
 include(":downloadX")
+include(":base")

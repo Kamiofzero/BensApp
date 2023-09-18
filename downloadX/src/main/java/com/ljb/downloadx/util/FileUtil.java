@@ -30,4 +30,9 @@ public class FileUtil {
         }
         return size;
     }
+
+    public static void deleteFile(String fileDownloadPath) {
+        File file = new File(fileDownloadPath);
+        if (file.exists()) file.delete();
+    }
 }

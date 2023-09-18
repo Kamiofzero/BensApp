@@ -33,6 +33,7 @@ class HomeFragment : Fragment(), OnClickListener {
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
+        binding.btnMyapp.setOnClickListener(this)
         return root
     }
 

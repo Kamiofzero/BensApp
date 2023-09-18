@@ -37,13 +37,15 @@ public class DownloadTask extends Task {
     public int status;
 
     public static final int STATUS_IDLE = 0;
-    public static final int STATUS_DOWNLOADING = 1;
-    public static final int STATUS_STOPPING = 2;
-    public static final int STATUS_STOPPED = 3;
-    public static final int STATUS_DOWNLOADED = 4;
-    public static final int STATUS_ERROR = 5;
-    public static final int STATUS_CANCEL = 6;
-    public static final int STATUS_CANCELED = 7;
+    public static final int STATUS_WAITING = 1;
+    public static final int STATUS_PREPARING = 2;
+    public static final int STATUS_DOWNLOADING = 3;
+    public static final int STATUS_STOPPING = 4;
+    public static final int STATUS_STOPPED = 5;
+    public static final int STATUS_DOWNLOADED = 6;
+    public static final int STATUS_ERROR = 7;
+    public static final int STATUS_CANCEL = 8;
+    public static final int STATUS_CANCELED = 9;
 
 
     String storagePath = Const.context.getExternalFilesDir(null) + "/DownloadTask";
@@ -53,6 +55,7 @@ public class DownloadTask extends Task {
 
 
     private Response networkRequest() {
+        status = STATUS_PREPARING;
         //创建OkHttpClient对象
         OkHttpClient client = new OkHttpClient();
         Request.Builder builder = new Request.Builder().url(url).get();
@@ -130,6 +133,7 @@ public class DownloadTask extends Task {
 
     private void download(Response response) {
         DownloadLog.i(TAG, "task[" + taskName + "] download start");
+        status = STATUS_DOWNLOADING;
         long progressSize = fileDownloadSize;
         RandomAccessFile raf = null;
         InputStream is = null;
@@ -180,6 +184,7 @@ public class DownloadTask extends Task {
             callback();
         } else if (status == STATUS_CANCEL) {
             status = STATUS_CANCELED;
+            FileUtil.deleteFile(fileDownloadPath);
             callback();
         } else if (fileDownloadSize == fileSize) {
             status = STATUS_DOWNLOADED;
@@ -190,7 +195,6 @@ public class DownloadTask extends Task {
 
     @Override
     void doTask() {
-        status = STATUS_DOWNLOADING;
         Response response = networkRequest();
         if (response != null) download(response);
     }
