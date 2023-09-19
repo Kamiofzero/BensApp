@@ -208,6 +208,11 @@ public class DownloadTask extends Task {
         if (status < STATUS_DOWNLOADED) status = STATUS_CANCEL;
     }
 
+    public void waitFor() {
+        status = STATUS_WAITING;
+        callback();
+    }
+
     private void callback() {
         callback.onStateChanged(DownloadInfo.copyFromTask(this));
     }
@@ -217,4 +222,6 @@ public class DownloadTask extends Task {
     public void setCallback(DownloadCallback callback) {
         this.callback = callback;
     }
+
+
 }

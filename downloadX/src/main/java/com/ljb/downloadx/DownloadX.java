@@ -1,5 +1,7 @@
 package com.ljb.downloadx;
 
+import static com.ljb.downloadx.DownloadTask.STATUS_WAITING;
+
 import java.util.HashMap;
 
 public class DownloadX {
@@ -37,6 +39,7 @@ public class DownloadX {
             task.setCallback(downloadCallback);
             taskMap.put(url, task);
         }
+        if (taskManager.isFullTask()) task.waitFor();
         taskManager.addTask(task);
     }
 

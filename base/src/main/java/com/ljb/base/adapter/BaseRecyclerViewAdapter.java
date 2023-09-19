@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
+import com.ljb.base.utils.LogUtil;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -96,10 +98,17 @@ public abstract class BaseRecyclerViewAdapter<T, V extends ViewBinding, VM exten
 
         Class<VM> vmClass = (Class<VM>) ((ParameterizedType) superclass).getActualTypeArguments()[2];
         Class<H> hClass = (Class<H>) ((ParameterizedType) superclass).getActualTypeArguments()[3];
+        LogUtil.i(hClass.toString());
+        LogUtil.i(getClass().toString());
+        for (Constructor constructor : hClass.getConstructors()) {
+            LogUtil.i(constructor.toString());
+        }
         H hInstance = null;
         try {
-            Constructor<H> constructor = hClass.getConstructor(aClass, vmClass);
-            hInstance = constructor.newInstance(vb, vm);
+
+            Constructor<H> constructor = hClass.getConstructor(getClass(), aClass, vmClass);
+            hClass.getConstructors();
+            hInstance = constructor.newInstance(this, vb, vm);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {

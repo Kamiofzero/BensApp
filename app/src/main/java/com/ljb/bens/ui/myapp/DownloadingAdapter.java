@@ -18,6 +18,9 @@ import com.ljb.base.utils.LogUtil;
 import com.ljb.bens.R;
 import com.ljb.bens.beans.AppInfo;
 import com.ljb.bens.databinding.ItemFileBinding;
+import com.ljb.downloadx.DownloadInfo;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -27,6 +30,7 @@ public class DownloadingAdapter extends SelectorAdapter<AppInfo, ItemFileBinding
     public DownloadingAdapter(Context context) {
         super(context);
     }
+
 
 //    @Override
 //    protected ItemFileBinding initViewBinding(LayoutInflater layoutInflater, ViewGroup container) {
@@ -51,19 +55,19 @@ public class DownloadingAdapter extends SelectorAdapter<AppInfo, ItemFileBinding
 
         @Override
         public void bind(SelectorAdapter.SelectorObject<AppInfo> data) {
-            AppInfo fileBean = data.getObj();
+            AppInfo bean = data.getObj();
             LogUtil.i(data.getObj().appName + " bind");
             status = STATUS_IDLE;
-            vb.name.setText(fileBean.appName);
-            bindChangeableUI(fileBean);
+            vb.name.setText(bean.appName);
+            bindChangeableUI(bean);
 
             vb.btnDownload.setOnClickListener(v -> {
-                LogUtil.i(fileBean.appName + " click");
+                LogUtil.i(bean.appName + " click");
 
                 if (status == STATUS_STOPPED || status == STATUS_CANCELED) {
-//                        FileManager.getInstance().download(fileBean);
+                    vm.download(bean.url);
                 } else if (status == STATUS_DOWNLOADING) {
-//                        FileManager.getInstance().stopDownload(fileBean);
+                    vm.stopDownload(bean.url);
                 }
 
             });
@@ -131,6 +135,16 @@ public class DownloadingAdapter extends SelectorAdapter<AppInfo, ItemFileBinding
         }
     }
 
+    public void update(@Nullable DownloadInfo info) {
+        for (int i = 0; i < dataList.size(); i++) {
+            AppInfo bean = dataList.get(i).getObj();
+            if (bean.url.equals(info.url)) {
+                updateSourceUI(bean, i);
+            }
+        }
+    }
+
+
     public void insertData(AppInfo fileBean) {
         insertSourceData(fileBean);
         if (recyclerView != null) {
@@ -139,37 +153,38 @@ public class DownloadingAdapter extends SelectorAdapter<AppInfo, ItemFileBinding
             }
         }
     }
+//
+//    public void onDownloaded(AppInfo fileBean) {
+//        int index = getIndexForDownloadingBean(fileBean.url);
+////        dataList.remove(index);
+////        notifyItemRemoved(index);
+//        removeSourceData(index);
+//        if (recyclerView != null) {
+//            if (this.dataList.size() == 0) {
+//                recyclerView.setVisibility(View.INVISIBLE);
+//            }
+//        }
+//    }
+//
+//    public void onDownloadCancel(AppInfo fileBean) {
+//        onDownloaded(fileBean);
+//    }
+//
+//    private void onDownloading(AppInfo fileBean) {
+//        int index = getIndexForDownloadingBean(fileBean.url);
+//        updateSourceUI(fileBean, index);
+//    }
 
-    public void onDownloaded(AppInfo fileBean) {
-        int index = getIndexForDownloadingBean(fileBean.url);
-//        dataList.remove(index);
-//        notifyItemRemoved(index);
-        removeSourceData(index);
-        if (recyclerView != null) {
-            if (this.dataList.size() == 0) {
-                recyclerView.setVisibility(View.INVISIBLE);
-            }
-        }
-    }
 
-    public void onDownloadCancel(AppInfo fileBean) {
-        onDownloaded(fileBean);
-    }
-
-    public void onDownloading(AppInfo fileBean) {
-        int index = getIndexForDownloadingBean(fileBean.url);
-        updateSourceUI(fileBean, index);
-    }
-
-    public int getIndexForDownloadingBean(String key) {
-        for (int i = 0; i < dataList.size(); i++) {
-            AppInfo fileBean = dataList.get(i).getObj();
-            if (fileBean.url.equals(key)) {
-                return i;
-            }
-        }
-        return -1;
-    }
+//    public int getIndexForDownloadingBean(String key) {
+//        for (int i = 0; i < dataList.size(); i++) {
+//            AppInfo fileBean = dataList.get(i).getObj();
+//            if (fileBean.url.equals(key)) {
+//                return i;
+//            }
+//        }
+//        return -1;
+//    }
 
 
 }

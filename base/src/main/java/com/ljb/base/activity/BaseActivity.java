@@ -11,15 +11,10 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewbinding.ViewBinding;
 
-import com.ljb.base.adapter.BaseRecyclerViewAdapter;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class BaseActivity<T extends ViewBinding, VM extends ViewModel> extends AppCompatActivity implements View.OnClickListener {
     protected T vb;
@@ -43,9 +38,13 @@ public abstract class BaseActivity<T extends ViewBinding, VM extends ViewModel> 
 
         vm = new ViewModelProvider(this).get((Class<VM>) ((ParameterizedType) superclass).getActualTypeArguments()[1]);
 
+        initView();
+        initModel();
+        initData();
     }
 
     protected abstract void initView();
 
     protected abstract void initData();
+    protected abstract void initModel();
 }

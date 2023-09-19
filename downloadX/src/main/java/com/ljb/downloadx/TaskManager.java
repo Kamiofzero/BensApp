@@ -12,6 +12,15 @@ public class TaskManager {
         executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(maxThreadSum);
     }
 
+    public int getRunningTaskCount() {
+        return executor.getActiveCount();
+    }
+
+    public boolean isFullTask() {
+        return executor.getActiveCount() == maxThreadSum;
+
+    }
+
 
     public void addTask(Task task) {
         executor.execute(task);
