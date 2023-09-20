@@ -20,7 +20,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseRecyclerViewAdapter<T, V extends ViewBinding, VM extends ViewModel, H extends BaseViewHolder<T, V, VM>> extends RecyclerView.Adapter<H> {
+public abstract class BaseRecyclerViewAdapter<T extends BeanKey, V extends ViewBinding, VM extends ViewModel, H extends BaseViewHolder<T, V, VM>> extends RecyclerView.Adapter<H> {
 
 
     protected Context context;
@@ -82,6 +82,16 @@ public abstract class BaseRecyclerViewAdapter<T, V extends ViewBinding, VM exten
         if (holder != null) holder.updateUI(data);
     }
 
+
+    public void updateUI(T data) {
+        int index = 0;
+        for (; index < dataList.size(); index++) {
+            if (dataList.get(index).getKey().equals(data.getKey())) {
+                H holder = getViewHolderByIndex(index);
+                if (holder != null) holder.updateUI(data);
+            }
+        }
+    }
 
     @Override
     public H onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

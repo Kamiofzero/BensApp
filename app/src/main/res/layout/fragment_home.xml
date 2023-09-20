@@ -8,8 +8,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_myapp"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginHorizontal="10dp"
         android:layout_marginTop="8dp"
         android:text="我的app"
         app:layout_constraintEnd_toEndOf="parent"

@@ -10,7 +10,7 @@ import androidx.viewbinding.ViewBinding;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SelectorAdapter<T, V extends ViewBinding, VM extends ViewModel, H extends BaseViewHolder<SelectorAdapter.SelectorObject<T>, V, VM>> extends BaseRecyclerViewAdapter<SelectorAdapter.SelectorObject<T>, V, VM, H> {
+public abstract class SelectorAdapter<T extends BeanKey, V extends ViewBinding, VM extends ViewModel, H extends BaseViewHolder<SelectorAdapter.SelectorObject<T>, V, VM>> extends BaseRecyclerViewAdapter<SelectorAdapter.SelectorObject<T>, V, VM, H> {
 
     protected boolean f_select_mode;
 
@@ -110,7 +110,7 @@ public abstract class SelectorAdapter<T, V extends ViewBinding, VM extends ViewM
     }
 
 
-    public static class SelectorObject<T> {
+    public static class SelectorObject<T extends BeanKey> implements BeanKey {
 
         boolean isSelected;
 
@@ -140,8 +140,12 @@ public abstract class SelectorAdapter<T, V extends ViewBinding, VM extends ViewM
         public T getObj() {
             return t;
         }
-    }
 
+        @Override
+        public String getKey() {
+            return t.getKey();
+        }
+    }
 
 
     @Override

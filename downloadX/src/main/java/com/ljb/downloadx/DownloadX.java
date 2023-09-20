@@ -1,6 +1,6 @@
 package com.ljb.downloadx;
 
-import static com.ljb.downloadx.DownloadTask.STATUS_WAITING;
+import android.content.Context;
 
 import java.util.HashMap;
 
@@ -22,6 +22,10 @@ public class DownloadX {
             if (downloadX == null) downloadX = new DownloadX();
         }
         return downloadX;
+    }
+
+    public static void init(Context context) {
+        Const.context = context;
     }
 
     public DownloadInfo getDownloadInfo(String url) {
@@ -47,7 +51,7 @@ public class DownloadX {
     public void stopDownload(String url) {
         if (url == null) return;
         DownloadTask task = taskMap.get(url);
-        if (task == null) {
+        if (task != null) {
             task.stop();
             taskManager.removeTask(task);
         }
@@ -56,7 +60,7 @@ public class DownloadX {
     public void cancelDownload(String url) {
         if (url == null) return;
         DownloadTask task = taskMap.get(url);
-        if (task == null) {
+        if (task != null) {
             task.cancel();
             taskManager.removeTask(task);
             taskMap.remove(task);

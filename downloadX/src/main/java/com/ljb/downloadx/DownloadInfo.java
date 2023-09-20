@@ -31,4 +31,18 @@ public class DownloadInfo {
     public static DownloadInfo copyFromTask(DownloadTask task) {
         return new DownloadInfo(task);
     }
+
+    @Override
+    public String toString() {
+        return "DownloadInfo{" +
+                "url='" + url + '\'' +
+                ", taskName='" + taskName + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", fileSize=" + fileSize +
+                ", fileDownloadSize=" + fileDownloadSize +
+                ", fileDownloadPercent=" + fileDownloadPercent +
+                ", fileDownloadPath='" + fileDownloadPath + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

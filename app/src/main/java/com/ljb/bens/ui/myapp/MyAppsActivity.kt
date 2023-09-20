@@ -51,11 +51,11 @@ class MyAppsActivity : BaseActivity<ActivityMyAppsBinding, MyAppViewModel>() {
 
 
     override fun initModel() {
-        vm.downloadInfo.observe(
+        vm.appInfoData.observe(
             this
         ) { adapter.update(it) }
 
-        vm.downloadList.observe(this) {
+        vm.appListData.observe(this) {
             adapter.setSourceDataList(it)
         }
     }

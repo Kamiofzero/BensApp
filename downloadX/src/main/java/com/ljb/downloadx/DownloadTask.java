@@ -56,14 +56,15 @@ public class DownloadTask extends Task {
 
     private Response networkRequest() {
         status = STATUS_PREPARING;
+        callback();
         //创建OkHttpClient对象
         OkHttpClient client = new OkHttpClient();
         Request.Builder builder = new Request.Builder().url(url).get();
         if (fileDownloadSize > 0) {
             builder.addHeader("RANGE", "bytes=" + fileDownloadSize + "-"/* + fileSize*/);
-            DownloadLog.i(TAG, "task[" + taskName + "] continue download from " + fileDownloadSize + " bytes");
+            DownloadLog.i(TAG, "task[" + url + "] continue download from " + fileDownloadSize + " bytes");
         } else {
-            DownloadLog.i(TAG, "task[" + taskName + "] start download");
+            DownloadLog.i(TAG, "task[" + url + "] start download");
         }
 
         //创建Request
@@ -76,7 +77,7 @@ public class DownloadTask extends Task {
             response = call.execute();
         } catch (IOException exception) {
             exception.printStackTrace();
-            DownloadLog.i(TAG, "task[" + taskName + "] network request fail");
+            DownloadLog.i(TAG, "task[" + url + "] network request fail");
             status = STATUS_ERROR;
             callback();
             return null;
@@ -84,13 +85,13 @@ public class DownloadTask extends Task {
 
 
         if (response == null || !response.isSuccessful()) {
-            DownloadLog.i(TAG, "task[" + taskName + "] network request fail");
+            DownloadLog.i(TAG, "task[" + url + "] network request fail");
             status = STATUS_ERROR;
             callback();
             return null;
         }
 
-        DownloadLog.i(TAG, "task[" + taskName + "] network request success");
+        DownloadLog.i(TAG, "task[" + url + "] network request success");
 
         if (fileSize == 0) {
             String fileLengthStr = response.header("Content-Length");
@@ -132,8 +133,9 @@ public class DownloadTask extends Task {
     }
 
     private void download(Response response) {
-        DownloadLog.i(TAG, "task[" + taskName + "] download start");
+        DownloadLog.i(TAG, "task[" + url + "] download start");
         status = STATUS_DOWNLOADING;
+        callback();
         long progressSize = fileDownloadSize;
         RandomAccessFile raf = null;
         InputStream is = null;
@@ -143,7 +145,7 @@ public class DownloadTask extends Task {
             File folder = new File(storagePath);
             if (!folder.exists()) folder.mkdirs();
 //            FileOutputStream fos = new FileOutputStream(new File(storagePath));
-            raf = new RandomAccessFile(new File(storagePath), "rw");
+            raf = new RandomAccessFile(new File(fileDownloadPath), "rw");
             byte[] buff = new byte[5120];
             int len;
             int progressPercent = 0;
@@ -154,7 +156,7 @@ public class DownloadTask extends Task {
                 fileDownloadSize = progressSize;
                 progressPercent = (int) (((float) progressSize / (float) fileSize) * 100);
                 if (progressPercent != fileDownloadPercent) {
-                    DownloadLog.i(TAG, " " + FileUtil.getFileSize(new File(storagePath)));
+                    DownloadLog.i(TAG, " " + FileUtil.getFileSize(new File(fileDownloadPath)));
                     fileDownloadPercent = progressPercent;
                     callback();
                 }
@@ -181,15 +183,16 @@ public class DownloadTask extends Task {
 
         if (status == STATUS_STOPPING) {
             status = STATUS_STOPPED;
-            callback();
+            DownloadLog.i(TAG, "task[" + url + "] stopped");
         } else if (status == STATUS_CANCEL) {
             status = STATUS_CANCELED;
             FileUtil.deleteFile(fileDownloadPath);
-            callback();
+            DownloadLog.i(TAG, "task[" + url + "] canceled");
         } else if (fileDownloadSize == fileSize) {
             status = STATUS_DOWNLOADED;
-            callback();
+            DownloadLog.i(TAG, "task[" + url + "] downloaded");
         }
+        callback();
     }
 
 
@@ -201,15 +204,22 @@ public class DownloadTask extends Task {
 
 
     public void stop() {
-        if (status <= STATUS_DOWNLOADING) status = STATUS_STOPPING;
+        if (status <= STATUS_DOWNLOADING) {
+            status = STATUS_STOPPING;
+            DownloadLog.i(TAG, "task[" + url + "] stopping");
+        }
     }
 
     public void cancel() {
-        if (status < STATUS_DOWNLOADED) status = STATUS_CANCEL;
+        if (status < STATUS_DOWNLOADED) {
+            status = STATUS_CANCEL;
+            DownloadLog.i(TAG, "task[" + url + "] canceling");
+        }
     }
 
     public void waitFor() {
         status = STATUS_WAITING;
+        DownloadLog.i(TAG, "task[" + url + "] waiting");
         callback();
     }
 

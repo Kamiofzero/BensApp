@@ -1,6 +1,10 @@
 package com.ljb.bens.beans;
 
-public class AppInfo {
+import static com.ljb.downloadx.DownloadTask.STATUS_IDLE;
+
+import com.ljb.base.adapter.BeanKey;
+
+public class AppInfo implements BeanKey {
 
     public String key;
 
@@ -19,5 +23,12 @@ public class AppInfo {
         this.appName = appName;
         this.appDescription = appDescription;
         this.url = url;
+        status = STATUS_IDLE;
+    }
+
+
+    @Override
+    public String getKey() {
+        return url;
     }
 }

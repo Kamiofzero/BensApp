@@ -18,6 +18,7 @@
             android:layout_height="wrap_content" />
 
     </FrameLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,7 +55,7 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/size"
+                android:id="@+id/description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp" />
@@ -84,17 +85,15 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
 
-                <Button
-                    android:id="@+id/btn_download"
-                    android:layout_width="65.0dp"
-                    android:layout_height="35.0dp"
-                    android:background="@color/design_default_color_secondary"
-                    android:textColor="@color/white" />
-            </FrameLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_download"
+                android:layout_width="65.0dp"
+                android:layout_height="45.0dp"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:text="下载"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
