@@ -47,6 +47,9 @@ class MyAppsActivity : BaseActivity<ActivityMyAppsBinding, MyAppViewModel>() {
         adapter.bindViewModel(vm)
 
         vb.btnCancel.setOnClickListener(this)
+
+        actionBar?.title="likeApps"
+        actionBar?.hide()
     }
 
 

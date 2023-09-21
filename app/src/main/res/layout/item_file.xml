@@ -13,8 +13,9 @@
 
         <CheckBox
             android:id="@+id/cb_select"
-            style="@style/Widget.AppCompat.CompoundButton.RadioButton"
+            style="@style/Widget.AppCompat.CompoundButton.CheckBox"
             android:layout_width="wrap_content"
+            android:checked="true"
             android:layout_height="wrap_content" />
 
     </FrameLayout>
@@ -88,7 +89,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_download"
-                android:layout_width="65.0dp"
+                android:layout_width="75.0dp"
                 android:layout_height="45.0dp"
                 android:gravity="center"
                 android:textAlignment="center"

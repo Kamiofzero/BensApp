@@ -87,8 +87,10 @@ public class DownloadingAdapter extends SelectorAdapter<AppInfo, ItemFileBinding
             }
 
             if (f_select_mode) {
+                vb.btnDownload.setVisibility(View.GONE);
                 vb.cbSelect.setVisibility(View.VISIBLE);
             } else {
+                vb.btnDownload.setVisibility(View.VISIBLE);
                 vb.cbSelect.setVisibility(View.GONE);
             }
         }
@@ -105,6 +107,7 @@ public class DownloadingAdapter extends SelectorAdapter<AppInfo, ItemFileBinding
             int progress = data.downloadPercent;
             if (vb.pb.getProgress() != progress) {
                 vb.pb.setProgress(progress);
+                vb.btnDownload.setText(progress+ "%");
                 LogUtil.i(data.appName + " p: " + data.downloadPercent);
             }
             int tempStatus = data.status;
@@ -113,7 +116,6 @@ public class DownloadingAdapter extends SelectorAdapter<AppInfo, ItemFileBinding
             if (status != tempStatus) {
                 status = tempStatus;
                 LogUtil.i("status: " + data.status);
-
                 if (status == STATUS_IDLE) {
                     vb.btnDownload.setText(context.getString(R.string.download));
                     LogUtil.i(data.appName + " state : IDLE");
@@ -127,7 +129,7 @@ public class DownloadingAdapter extends SelectorAdapter<AppInfo, ItemFileBinding
                     vb.btnDownload.setText(context.getString(R.string.download));
                     LogUtil.i(data.appName + " state : STOP");
                 } else if (status == STATUS_DOWNLOADING) {
-                    vb.btnDownload.setText(context.getString(R.string.stop));
+//                    vb.btnDownload.setText(context.getString(R.string.stop));
                     vb.pb.setVisibility(View.VISIBLE);
                     LogUtil.i(data.appName + " state : DOWNLOADING");
                 } else if (status == STATUS_DOWNLOADED) {

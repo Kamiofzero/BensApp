@@ -48,7 +48,7 @@ class MyAppViewModel : ViewModel() {
     }
 
     fun launch(appName: String) {
-        
+
     }
 
 
