@@ -47,5 +47,9 @@ class MyAppViewModel : ViewModel() {
         myAppRepository.loadAppList()
     }
 
+    fun launch(appName: String) {
+        
+    }
+
 
 }

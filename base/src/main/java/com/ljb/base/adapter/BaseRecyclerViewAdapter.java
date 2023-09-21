@@ -78,6 +78,7 @@ public abstract class BaseRecyclerViewAdapter<T extends BeanKey, V extends ViewB
 
 
     public void updateUIByIndex(T data, int index) {
+        dataList.set(index, data);
         H holder = getViewHolderByIndex(index);
         if (holder != null) holder.updateUI(data);
     }
@@ -87,8 +88,10 @@ public abstract class BaseRecyclerViewAdapter<T extends BeanKey, V extends ViewB
         int index = 0;
         for (; index < dataList.size(); index++) {
             if (dataList.get(index).getKey().equals(data.getKey())) {
+                dataList.set(index, data);
                 H holder = getViewHolderByIndex(index);
                 if (holder != null) holder.updateUI(data);
+                break;
             }
         }
     }

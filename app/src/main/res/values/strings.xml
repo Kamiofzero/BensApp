@@ -9,4 +9,5 @@
     <string name="stop">暂停</string>
     <string name="retry">重试</string>
     <string name="no_item">还没有项目哦</string>
+    <string name="launch">启动\n</string>
 </resources>

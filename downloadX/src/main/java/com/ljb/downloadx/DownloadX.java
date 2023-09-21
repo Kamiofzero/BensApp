@@ -2,9 +2,12 @@ package com.ljb.downloadx;
 
 import android.content.Context;
 
+import com.ljb.downloadx.util.DownloadLog;
+
 import java.util.HashMap;
 
 public class DownloadX {
+    private final static String TAG = "DownloadX";
 
     private static DownloadX downloadX;
 
@@ -36,12 +39,14 @@ public class DownloadX {
 
     public void download(String url) {
         if (url == null) return;
+        DownloadLog.i(TAG, "download url[" + url + "]");
         DownloadTask task = taskMap.get(url);
         if (task == null) {
             task = new DownloadTask();
             task.url = url;
             task.setCallback(downloadCallback);
             taskMap.put(url, task);
+            DownloadLog.i(TAG, "create task[" + url + "]");
         }
         if (taskManager.isFullTask()) task.waitFor();
         taskManager.addTask(task);
@@ -50,6 +55,7 @@ public class DownloadX {
 
     public void stopDownload(String url) {
         if (url == null) return;
+        DownloadLog.i(TAG, "stopDownload url[" + url + "]");
         DownloadTask task = taskMap.get(url);
         if (task != null) {
             task.stop();
@@ -59,6 +65,7 @@ public class DownloadX {
 
     public void cancelDownload(String url) {
         if (url == null) return;
+        DownloadLog.i(TAG, "cancelDownload url[" + url + "]");
         DownloadTask task = taskMap.get(url);
         if (task != null) {
             task.cancel();

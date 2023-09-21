@@ -2,6 +2,7 @@ package com.ljb.bens.ui.myapp;
 
 
 import static com.ljb.downloadx.DownloadTask.STATUS_CANCELED;
+import static com.ljb.downloadx.DownloadTask.STATUS_DOWNLOADED;
 import static com.ljb.downloadx.DownloadTask.STATUS_DOWNLOADING;
 import static com.ljb.downloadx.DownloadTask.STATUS_ERROR;
 import static com.ljb.downloadx.DownloadTask.STATUS_IDLE;
@@ -64,12 +65,15 @@ public class DownloadingAdapter extends SelectorAdapter<AppInfo, ItemFileBinding
             vb.btnDownload.setOnClickListener(v -> {
                 LogUtil.i(bean.appName + " click");
 
-                if (status == STATUS_IDLE || status == STATUS_STOPPED || status == STATUS_CANCELED) {
+                if (status == STATUS_IDLE || status == STATUS_STOPPED || status == STATUS_ERROR) {
                     LogUtil.i(bean.appName + " download");
                     vm.download(bean.url);
                 } else if (status == STATUS_DOWNLOADING) {
                     LogUtil.i(bean.appName + " stopDownload");
                     vm.stopDownload(bean.url);
+                } else if (status == STATUS_DOWNLOADED) {
+                    LogUtil.i(bean.appName + " launch");
+                    vm.launch(bean.appName);
                 }
 
             });
@@ -124,7 +128,18 @@ public class DownloadingAdapter extends SelectorAdapter<AppInfo, ItemFileBinding
                     LogUtil.i(data.appName + " state : STOP");
                 } else if (status == STATUS_DOWNLOADING) {
                     vb.btnDownload.setText(context.getString(R.string.stop));
+                    vb.pb.setVisibility(View.VISIBLE);
                     LogUtil.i(data.appName + " state : DOWNLOADING");
+                } else if (status == STATUS_DOWNLOADED) {
+                    vb.btnDownload.setText(context.getString(R.string.launch));
+                    vb.pb.setProgress(0);
+                    vb.pb.setVisibility(View.INVISIBLE);
+                    LogUtil.i(data.appName + " state : DOWNLOADED");
+                } else if (status == STATUS_CANCELED) {
+                    vb.btnDownload.setText(context.getString(R.string.download));
+                    vb.pb.setProgress(0);
+                    vb.pb.setVisibility(View.INVISIBLE);
+                    LogUtil.i(data.appName + " state : ERROR");
                 } else if (status == STATUS_ERROR) {
                     vb.btnDownload.setText(context.getString(R.string.retry));
                     LogUtil.i(data.appName + " state : ERROR");
