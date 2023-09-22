@@ -1,10 +1,12 @@
 package com.ljb.bens.ui.myapp
 
+import android.app.ActionBar
 import android.view.View
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ljb.base.activity.BaseActivity
+import com.ljb.base.utils.LogUtil
 import com.ljb.bens.R
 import com.ljb.bens.databinding.ActivityMyAppsBinding
 
@@ -48,8 +50,9 @@ class MyAppsActivity : BaseActivity<ActivityMyAppsBinding, MyAppViewModel>() {
 
         vb.btnCancel.setOnClickListener(this)
 
-        actionBar?.title="likeApps"
-        actionBar?.hide()
+        LogUtil.i(supportActionBar?.toString() ?: "null")
+        supportActionBar?.title = "likeApps"
+
     }
 
 

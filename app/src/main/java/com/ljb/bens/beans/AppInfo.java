@@ -2,10 +2,14 @@ package com.ljb.bens.beans;
 
 import static com.ljb.downloadx.DownloadTask.STATUS_IDLE;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.ljb.base.adapter.BeanKey;
 
+@Entity
 public class AppInfo implements BeanKey {
-
+    @PrimaryKey
     public String key;
 
     public String appName;
@@ -23,6 +27,7 @@ public class AppInfo implements BeanKey {
         this.appName = appName;
         this.appDescription = appDescription;
         this.url = url;
+        this.key = url;
         status = STATUS_IDLE;
     }
 
