@@ -11,7 +11,7 @@ import com.ljb.bens.beans.AppInfo
 interface AppInfoDao {
 
     @Query("SELECT * FROM AppInfo")
-    fun getAll(): List<AppInfo>
+    fun getAll(): List<AppInfo>?
 
     @Query("SELECT * FROM AppInfo WHERE appName LIKE :appName")
     fun getByName(appName: String): AppInfo
@@ -21,6 +21,9 @@ interface AppInfoDao {
 
     @Insert
     fun insertAll(vararg bean: AppInfo)
+
+    @Insert
+    fun insertAll(beans: List<AppInfo>)
 
     @Delete
     fun delete(bean: AppInfo)

@@ -1,27 +1,24 @@
 package com.ljb.bens.ui.myapp
 
 import com.ljb.base.utils.LogUtil
+import com.ljb.bens.BensApp
 import com.ljb.bens.beans.AppInfo
 import com.ljb.downloadx.DownloadX
 
 class MyAppRepository {
-
+    private val TAG: String = "MyAppRepository"
     private var appList = arrayListOf<AppInfo>()
 
     private var downloadX: DownloadX = DownloadX.getInstance()
 
     private var callback: Callback? = null
 
+    private var dao = BensApp.appInfoDao
+
     companion object {
 
         val instance: MyAppRepository by lazy { MyAppRepository() }
 
-//        private lateinit var instance: MyAppRepository
-//
-//        fun getInstance(): MyAppRepository {
-//            @Synchronized if (instance == null) instance = MyAppRepository()
-//            return instance
-//        }
     }
 
     fun setCallback(callback: Callback) {
@@ -65,8 +62,11 @@ class MyAppRepository {
 
 
     fun loadAppList() {
-        //TODO 本地无数据
-        if (appList.isEmpty()) {
+        var list = dao.getAll()
+        LogUtil.i(TAG, "load app list: ${list?.size ?: 0} item loaded")
+        if (list?.isNotEmpty() == true) {
+            appList.addAll(list)
+        } else {
             appList.add(
                 AppInfo(
                     "bilibili",
@@ -88,6 +88,7 @@ class MyAppRepository {
                     "via", "简洁浏览器", "https://res.viayoo.com/v1/via-release-cn.apk"
                 )
             )
+            dao.insertAll(appList)
         }
         callback?.onDataLoaded(appList)
     }
