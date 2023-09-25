@@ -111,11 +111,6 @@ public abstract class BaseRecyclerViewAdapter<T extends BeanKey, V extends ViewB
 
         Class<VM> vmClass = (Class<VM>) ((ParameterizedType) superclass).getActualTypeArguments()[2];
         Class<H> hClass = (Class<H>) ((ParameterizedType) superclass).getActualTypeArguments()[3];
-        LogUtil.i(hClass.toString());
-        LogUtil.i(getClass().toString());
-        for (Constructor constructor : hClass.getConstructors()) {
-            LogUtil.i(constructor.toString());
-        }
         H hInstance = null;
         try {
 

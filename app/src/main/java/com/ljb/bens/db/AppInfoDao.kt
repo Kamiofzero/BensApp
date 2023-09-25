@@ -11,28 +11,28 @@ import com.ljb.bens.beans.AppInfo
 interface AppInfoDao {
 
     @Query("SELECT * FROM AppInfo")
-    fun getAll(): List<AppInfo>?
+    suspend fun getAll(): List<AppInfo>?
 
     @Query("SELECT * FROM AppInfo WHERE appName LIKE :appName")
-    fun getByName(appName: String): AppInfo
+    suspend fun getByName(appName: String): AppInfo
 
     @Insert
-    fun insert(bean: AppInfo)
+    suspend fun insert(bean: AppInfo)
 
     @Insert
-    fun insertAll(vararg bean: AppInfo)
+    suspend fun insertAll(vararg bean: AppInfo)
 
     @Insert
-    fun insertAll(beans: List<AppInfo>)
+    suspend fun insertAll(beans: List<AppInfo>)
 
     @Delete
-    fun delete(bean: AppInfo)
+    suspend fun delete(bean: AppInfo)
 
     @Delete
-    fun deleteAll(vararg bean: AppInfo)
+    suspend fun deleteAll(vararg bean: AppInfo)
 
 
     @Update
-    fun update(bean: AppInfo)
+    suspend fun update(bean: AppInfo)
 
 }

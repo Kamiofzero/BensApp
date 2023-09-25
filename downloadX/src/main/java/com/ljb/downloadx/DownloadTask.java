@@ -26,7 +26,6 @@ public class DownloadTask extends Task {
 
     public String url;
 
-    public String taskName;
     public String fileName;
     public long fileSize;
     public long fileDownloadSize;
@@ -36,22 +35,43 @@ public class DownloadTask extends Task {
 
     public int status;
 
+    long createTime;
+
+    long completeTime;
+
     public static final int STATUS_IDLE = 0;
     public static final int STATUS_WAITING = 1;
     public static final int STATUS_PREPARING = 2;
-    public static final int STATUS_DOWNLOADING = 3;
-    public static final int STATUS_STOPPING = 4;
-    public static final int STATUS_STOPPED = 5;
-    public static final int STATUS_DOWNLOADED = 6;
-    public static final int STATUS_ERROR = 7;
-    public static final int STATUS_CANCEL = 8;
-    public static final int STATUS_CANCELED = 9;
+    public static final int STATUS_PREPARED = 3;
+    public static final int STATUS_DOWNLOADING = 4;
+    public static final int STATUS_STOPPING = 5;
+    public static final int STATUS_STOPPED = 6;
+    public static final int STATUS_DOWNLOADED = 7;
+    public static final int STATUS_ERROR = 8;
+    public static final int STATUS_CANCEL = 9;
+    public static final int STATUS_CANCELED = 10;
 
 
     String storagePath = Const.context.getExternalFilesDir(null) + "/DownloadTask";
 
+    public DownloadTask() {
+
+    }
 
     Call call;
+
+    public DownloadTask(DownloadInfo info) {
+        super();
+        this.url = info.getUrl();
+        this.fileName = info.getFileName();
+        this.fileSize = info.getFileSize();
+        this.fileDownloadSize = info.getFileDownloadSize();
+        this.fileDownloadPercent = info.getFileDownloadPercent();
+        this.fileDownloadPath = info.getFileDownloadPath();
+        this.status = info.getStatus();
+        this.createTime = info.getCreateTime();
+        this.completeTime = info.getCompleteTime();
+    }
 
 
     private Response networkRequest() {
@@ -95,7 +115,7 @@ public class DownloadTask extends Task {
 
         if (fileSize == 0) {
             String fileLengthStr = response.header("Content-Length");
-            fileSize = new Integer(fileLengthStr);
+            fileSize = new Long(fileLengthStr);
             DownloadLog.i(TAG, "file size : " + fileSize);
         }
 
@@ -126,7 +146,8 @@ public class DownloadTask extends Task {
             fileDownloadPath = storagePath + "/" + fileName;
             DownloadLog.i(TAG, "file fileName : " + fileName);
             DownloadLog.i(TAG, "storage path : " + storagePath);
-
+            status = STATUS_PREPARED;
+            callback();
 //            DataBaseManager.getInstance().update(downloadInfo);
         }
         return response;
@@ -156,7 +177,6 @@ public class DownloadTask extends Task {
                 fileDownloadSize = progressSize;
                 progressPercent = (int) (((float) progressSize / (float) fileSize) * 100);
                 if (progressPercent != fileDownloadPercent) {
-                    DownloadLog.i(TAG, " " + FileUtil.getFileSize(new File(fileDownloadPath)));
                     fileDownloadPercent = progressPercent;
                     callback();
                 }

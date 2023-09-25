@@ -21,7 +21,9 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -67,4 +69,11 @@ dependencies {
     implementation("androidx.room:room-guava:$room_version")
     // optional - Paging 3 Integration
     implementation("androidx.room:room-paging:$room_version")
+
+    //RxJava的依赖包
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.0")
+//RxAndroid的依赖包
+    implementation("io.reactivex.rxjava3:rxjava:3.0.0")
+
+
 }

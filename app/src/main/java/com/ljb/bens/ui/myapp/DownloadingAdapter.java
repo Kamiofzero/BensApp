@@ -6,6 +6,7 @@ import static com.ljb.downloadx.DownloadTask.STATUS_DOWNLOADED;
 import static com.ljb.downloadx.DownloadTask.STATUS_DOWNLOADING;
 import static com.ljb.downloadx.DownloadTask.STATUS_ERROR;
 import static com.ljb.downloadx.DownloadTask.STATUS_IDLE;
+import static com.ljb.downloadx.DownloadTask.STATUS_PREPARED;
 import static com.ljb.downloadx.DownloadTask.STATUS_PREPARING;
 import static com.ljb.downloadx.DownloadTask.STATUS_STOPPED;
 import static com.ljb.downloadx.DownloadTask.STATUS_WAITING;
@@ -26,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class DownloadingAdapter extends SelectorAdapter<AppInfo, ItemFileBinding, MyAppViewModel, DownloadingAdapter.MyViewHolder> {
+    private final String TAG = "DownloadingAdapter";
 
 
     public DownloadingAdapter(Context context) {
@@ -57,14 +59,12 @@ public class DownloadingAdapter extends SelectorAdapter<AppInfo, ItemFileBinding
         @Override
         public void bind(SelectorAdapter.SelectorObject<AppInfo> data) {
             AppInfo bean = data.getObj();
-            LogUtil.i(data.getObj().appName + " bind");
+//            LogUtil.i(TAG, data.getObj().appName + " bind");
             vb.name.setText(bean.appName);
             vb.description.setText(bean.appDescription);
             bindChangeableUI(bean);
 
             vb.btnDownload.setOnClickListener(v -> {
-                LogUtil.i(bean.appName + " click");
-
                 if (status == STATUS_IDLE || status == STATUS_STOPPED || status == STATUS_ERROR) {
                     LogUtil.i(bean.appName + " download");
                     vm.download(bean.url);
@@ -103,48 +103,50 @@ public class DownloadingAdapter extends SelectorAdapter<AppInfo, ItemFileBinding
 
 
         private void bindChangeableUI(AppInfo data) {
-            LogUtil.i("bindChangeableUI");
+//            LogUtil.i(TAG,"bindChangeableUI");
             int progress = data.downloadPercent;
             if (vb.pb.getProgress() != progress) {
                 vb.pb.setProgress(progress);
-                vb.btnDownload.setText(progress+ "%");
-                LogUtil.i(data.appName + " p: " + data.downloadPercent);
+                vb.btnDownload.setText(progress + "%");
+                LogUtil.i(TAG, data.appName + " progress: " + data.downloadPercent);
             }
             int tempStatus = data.status;
-            LogUtil.i("data status: " + data.status);
+//            LogUtil.i(TAG,"data status: " + data.status);
 
             if (status != tempStatus) {
                 status = tempStatus;
-                LogUtil.i("status: " + data.status);
+//                LogUtil.i(TAG,"status: " + data.status);
                 if (status == STATUS_IDLE) {
                     vb.btnDownload.setText(context.getString(R.string.download));
-                    LogUtil.i(data.appName + " state : IDLE");
+                    LogUtil.i(TAG, data.appName + " state : IDLE");
                 } else if (status == STATUS_WAITING) {
                     vb.btnDownload.setText(context.getString(R.string.waiting));
-                    LogUtil.i(data.appName + " state : WAITING");
+                    LogUtil.i(TAG, data.appName + " state : WAITING");
                 } else if (status == STATUS_PREPARING) {
                     vb.btnDownload.setText(context.getString(R.string.preparing));
-                    LogUtil.i(data.appName + " state : PREPARE_DOWNLOADING");
+                    LogUtil.i(TAG, data.appName + " state : PREPARE_DOWNLOADING");
+                } else if (status == STATUS_PREPARED) {
+                    LogUtil.i(TAG, data.appName + " state : STATUS_PREPARED");
                 } else if (status == STATUS_STOPPED) {
-                    vb.btnDownload.setText(context.getString(R.string.download));
-                    LogUtil.i(data.appName + " state : STOP");
+                    vb.btnDownload.setText(context.getString(R.string.continue_d));
+                    LogUtil.i(TAG, data.appName + " state : STOP");
                 } else if (status == STATUS_DOWNLOADING) {
 //                    vb.btnDownload.setText(context.getString(R.string.stop));
                     vb.pb.setVisibility(View.VISIBLE);
-                    LogUtil.i(data.appName + " state : DOWNLOADING");
+                    LogUtil.i(TAG, data.appName + " state : DOWNLOADING");
                 } else if (status == STATUS_DOWNLOADED) {
                     vb.btnDownload.setText(context.getString(R.string.launch));
                     vb.pb.setProgress(0);
                     vb.pb.setVisibility(View.INVISIBLE);
-                    LogUtil.i(data.appName + " state : DOWNLOADED");
+                    LogUtil.i(TAG, data.appName + " state : DOWNLOADED");
                 } else if (status == STATUS_CANCELED) {
                     vb.btnDownload.setText(context.getString(R.string.download));
                     vb.pb.setProgress(0);
                     vb.pb.setVisibility(View.INVISIBLE);
-                    LogUtil.i(data.appName + " state : ERROR");
+                    LogUtil.i(TAG, data.appName + " state : ERROR");
                 } else if (status == STATUS_ERROR) {
                     vb.btnDownload.setText(context.getString(R.string.retry));
-                    LogUtil.i(data.appName + " state : ERROR");
+                    LogUtil.i(TAG, data.appName + " state : ERROR");
                 }
             }
         }
@@ -163,7 +165,7 @@ public class DownloadingAdapter extends SelectorAdapter<AppInfo, ItemFileBinding
     }
 
     public void update(@Nullable AppInfoPkg pkg) {
-        LogUtil.i("update");
+//        LogUtil.i(TAG,"update");
         updateSourceUI(pkg.appInfo, pkg.index);
     }
 

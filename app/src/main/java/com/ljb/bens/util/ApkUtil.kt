@@ -32,6 +32,15 @@ class ApkUtil {
             }
         }
 
+        fun getApkSize(storagePath: String?): Long {
+            if (storagePath.isNullOrEmpty()) return 0
+            var apkFile = File(storagePath)
+            if (apkFile.exists() && apkFile.isFile) {
+                return apkFile.length()
+            }
+            return 0
+        }
+
 
     }
 }

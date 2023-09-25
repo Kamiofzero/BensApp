@@ -1,10 +1,14 @@
 package com.ljb.downloadx;
 
+import static com.ljb.downloadx.DownloadTask.STATUS_PREPARED;
+
 import android.content.Context;
 
+import com.ljb.downloadx.database.DataBaseManager;
 import com.ljb.downloadx.util.DownloadLog;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class DownloadX {
     private final static String TAG = "DownloadX";
@@ -13,10 +17,13 @@ public class DownloadX {
 
     TaskManager taskManager;
 
+    DataBaseManager dataBaseManager;
+
     HashMap<String, DownloadTask> taskMap;
 
     private DownloadX() {
         taskManager = new TaskManager();
+        dataBaseManager = DataBaseManager.getInstance();
         taskMap = new HashMap<>();
     }
 
@@ -27,8 +34,20 @@ public class DownloadX {
         return downloadX;
     }
 
-    public static void init(Context context) {
+    public void init(Context context) {
         Const.context = context;
+        dataBaseManager.init(context);
+    }
+
+    public void loadData() {
+        List<DownloadInfo> downloadInfoList = dataBaseManager.query();
+        DownloadLog.i(TAG, "load " + downloadInfoList.size() + " items");
+        for (DownloadInfo info : downloadInfoList) {
+            DownloadTask task = new DownloadTask(info);
+            task.setCallback(downloadCallback);
+            taskMap.put(info.url, task);
+            DownloadLog.i(TAG, info.toString());
+        }
     }
 
     public DownloadInfo getDownloadInfo(String url) {
@@ -46,6 +65,7 @@ public class DownloadX {
             task.url = url;
             task.setCallback(downloadCallback);
             taskMap.put(url, task);
+            dataBaseManager.insert(DownloadInfo.copyFromTask(task));
             DownloadLog.i(TAG, "create task[" + url + "]");
         }
         if (taskManager.isFullTask()) task.waitFor();
@@ -71,6 +91,7 @@ public class DownloadX {
             task.cancel();
             taskManager.removeTask(task);
             taskMap.remove(task);
+            dataBaseManager.delete(DownloadInfo.copyFromTask(task));
         }
     }
 
@@ -89,7 +110,7 @@ public class DownloadX {
     DownloadCallback downloadCallback = new DownloadCallback() {
         @Override
         public void onStateChanged(DownloadInfo info) {
-
+            if (info.status == STATUS_PREPARED) dataBaseManager.update(info);
             if (taskProgressListener != null) taskProgressListener.onTaskProgress(info);
         }
     };
