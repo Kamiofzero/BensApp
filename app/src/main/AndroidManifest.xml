@@ -16,10 +16,15 @@
         android:theme="@style/Theme.BensApp"
         tools:targetApi="31">
         <activity
+            android:name=".ui.myapp.ScrollingActivity"
+            android:exported="false"
+            android:label="@string/title_activity_scrolling"
+            android:theme="@style/Theme.BensApp.NoActionBar" />
+        <activity
             android:name=".ui.myapp.AppDetailActivity"
             android:exported="false"
             android:label="@string/title_activity_app_detail"
-            android:theme="@style/Theme.BensApp.NoActionBar" />
+            android:theme="@style/Theme.BensApp.AppDetail" />
         <activity
             android:name=".ui.myapp.MyAppsActivity"
             android:exported="false" />

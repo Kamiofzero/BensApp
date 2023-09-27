@@ -140,6 +140,10 @@ class MyAppRepository {
         } else callback?.onDataLoaded(appList)
     }
 
+    fun getApp(index: Int): AppInfo {
+        return appList[index]
+    }
+
 
     interface Callback {
         fun onDataLoaded(appList: List<AppInfo>)
