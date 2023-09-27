@@ -34,17 +34,30 @@ public abstract class SelectorAdapter<T extends BeanKey, V extends ViewBinding, 
                 } else {
                     select();
                 }
-                if (onSelectChangedListener != null)
-                    onSelectChangedListener.onSelectChanged(f_select_mode);
+
                 return false;
+            }
+        });
+        setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                if (f_select_mode) {
+                    SelectorObject selectorObject = dataList.get(position);
+                    selectorObject.setSelected(!selectorObject.isSelected);
+                    notifyItemChanged(position);
+                } else {
+                    if (itemClickWithoutSelectListener != null)
+                        itemClickWithoutSelectListener.onItemClick(view, position);
+                }
             }
         });
     }
 
 
-    private void select() {
+    public void select() {
         f_select_mode = true;
         notifyDataSetChanged();
+        if (onSelectChangedListener != null) onSelectChangedListener.onSelectChanged(f_select_mode);
     }
 
     public void cancelSelect() {
@@ -53,6 +66,7 @@ public abstract class SelectorAdapter<T extends BeanKey, V extends ViewBinding, 
             obj.setSelected(false);
         }
         notifyDataSetChanged();
+        if (onSelectChangedListener != null) onSelectChangedListener.onSelectChanged(f_select_mode);
     }
 
     public void allSelect(boolean b) {
@@ -60,6 +74,10 @@ public abstract class SelectorAdapter<T extends BeanKey, V extends ViewBinding, 
             obj.setSelected(b);
         }
         notifyDataSetChanged();
+    }
+
+    public boolean isSelect() {
+        return f_select_mode;
     }
 
 
@@ -96,6 +114,17 @@ public abstract class SelectorAdapter<T extends BeanKey, V extends ViewBinding, 
 
     public void updateSourceUI(T t, int index) {
         updateUIByIndex(new SelectorObject<>(t), index);
+    }
+
+
+    public interface OnItemClickWithoutSelectListener {
+        void onItemClick(View view, int position);
+    }
+
+    OnItemClickWithoutSelectListener itemClickWithoutSelectListener;
+
+    public void setItemClickWithoutSelectListener(OnItemClickWithoutSelectListener listener) {
+        this.itemClickWithoutSelectListener = listener;
     }
 
 

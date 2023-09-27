@@ -1,30 +1,32 @@
 package com.ljb.bens.ui.myapp
 
-import android.app.ActionBar
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ljb.base.activity.BaseActivity
-import com.ljb.base.utils.LogUtil
 import com.ljb.bens.R
+import com.ljb.bens.animation.AnimationMan
 import com.ljb.bens.databinding.ActivityMyAppsBinding
 
 class MyAppsActivity : BaseActivity<ActivityMyAppsBinding, MyAppViewModel>() {
 
-//    private lateinit var binding: ActivityMyAppsBinding
-//
-//    lateinit var viewModel: MyAppViewModel
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        binding = ActivityMyAppsBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-//
-//        viewModel = ViewModelProvider(this).get(MyAppViewModel::class.java)
-//
-//
-//    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.actionbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.setting -> {
+
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -47,12 +49,15 @@ class MyAppsActivity : BaseActivity<ActivityMyAppsBinding, MyAppViewModel>() {
         vb.recyclerView.adapter = adapter
         adapter.bindRecyclerView(vb.recyclerView)
         adapter.bindViewModel(vm)
-
+        adapter.setOnSelectChangedListener {
+            AnimationMan.myAppOperationBarAnim(vb.lOperation, it)
+        }
         vb.btnCancel.setOnClickListener(this)
+        supportActionBar?.title = "FavorApps"
 
-        LogUtil.i(supportActionBar?.toString() ?: "null")
-        supportActionBar?.title = "likeApps"
-
+        vb.flContent.viewTreeObserver.addOnGlobalLayoutListener {
+            vb.lOperation.y = vb.flContent.height.toFloat()
+        }
     }
 
 
@@ -60,17 +65,18 @@ class MyAppsActivity : BaseActivity<ActivityMyAppsBinding, MyAppViewModel>() {
         vm.appInfoData.observe(
             this
         ) { adapter.update(it) }
-
         vm.appListData.observe(this) {
-            adapter.setSourceDataList(it)
+            adapter.setSourceDataList(it.toMutableList())
         }
     }
 
     override fun initData() {
         vm.getData()
-
-
     }
 
+    override fun onBackPressed() {
+        if (adapter.isSelect) adapter.cancelSelect()
+        else super.onBackPressed()
+    }
 
 }
