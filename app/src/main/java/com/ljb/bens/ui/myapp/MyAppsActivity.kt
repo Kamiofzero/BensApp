@@ -35,23 +35,27 @@ class MyAppsActivity : BaseActivity<ActivityMyAppsBinding, MyAppViewModel>() {
         }
     }
 
-    private lateinit var adapter: DownloadingAdapter
+    private lateinit var mAdapter: DownloadingAdapter
 
     override fun initView() {
-        vb.recyclerView.layoutManager = LinearLayoutManager(context)
-        vb.recyclerView.itemAnimator = DefaultItemAnimator()
-        vb.recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                context, LinearLayoutManager.VERTICAL
-            )
-        )
-        adapter = DownloadingAdapter(context)
-        vb.recyclerView.adapter = adapter
-        adapter.bindRecyclerView(vb.recyclerView)
-        adapter.bindViewModel(vm)
-        adapter.setOnSelectChangedListener {
-            AnimationMan.myAppOperationBarAnim(vb.lOperation, it)
+        mAdapter = DownloadingAdapter(context).apply {
+            bindRecyclerView(vb.recyclerView)
+            bindViewModel(vm)
+            setOnSelectChangedListener {
+                AnimationMan.myAppOperationBarAnim(vb.lOperation, it)
+            }
         }
+        vb.recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            itemAnimator = DefaultItemAnimator()
+            addItemDecoration(
+                DividerItemDecoration(
+                    context, LinearLayoutManager.VERTICAL
+                )
+            )
+            adapter = mAdapter
+        }
+
         vb.btnCancel.setOnClickListener(this)
         supportActionBar?.title = "FavorApps"
 
@@ -64,9 +68,9 @@ class MyAppsActivity : BaseActivity<ActivityMyAppsBinding, MyAppViewModel>() {
     override fun initModel() {
         vm.appInfoData.observe(
             this
-        ) { adapter.update(it) }
+        ) { mAdapter.update(it) }
         vm.appListData.observe(this) {
-            adapter.setSourceDataList(it.toMutableList())
+            mAdapter.setSourceDataList(it)
         }
     }
 
@@ -75,7 +79,7 @@ class MyAppsActivity : BaseActivity<ActivityMyAppsBinding, MyAppViewModel>() {
     }
 
     override fun onBackPressed() {
-        if (adapter.isSelect) adapter.cancelSelect()
+        if (mAdapter.isSelect) mAdapter.cancelSelect()
         else super.onBackPressed()
     }
 
